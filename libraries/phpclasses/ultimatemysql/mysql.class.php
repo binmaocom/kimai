@@ -2,29 +2,17 @@
 /**
  * Ultimate MySQL Wrapper Class
  *
- * @version 3.0
- * @author Jeff L. Williams
- * @link http://www.phpclasses.org/ultimatemysql
- *
- * Contributions from
- *   Frank P. Walentynowicz
- *   Larry Wakeman
- *   Nicola Abbiuso
- *   Douglas Gintz
- *   Emre Erkan
- *   Vincent van Daal
- *   Michael Ansaldi
- *   Ryan Tse
  */
 class MySQL
 {
 	// SET THESE VALUES TO MATCH YOUR DATA CONNECTION
-	private $db_host    = "localhost"; // server name
-	private $db_user    = "";          // user name
-	private $db_pass    = "";          // password
-	private $db_dbname  = "";          // database name
-	private $db_charset = "";          // optional character set (i.e. utf8)
+	private $db_host    = HOST_NAME; // server name
+	private $db_user    = DB_USER;          // user name
+	private $db_pass    = DB_PASSWORD;          // password
+	private $db_dbname  = DB_NAME;          // database name
+	private $db_charset = "utf8";          // optional character set (i.e. utf8)
 	private $db_pcon    = false;      // use persistent connection?
+
 
 	// constants for SQLValue function
 	const SQLVALUE_BIT      = "bit";
@@ -300,7 +288,7 @@ class MySQL
 				if (is_null($value)) {
 					$where = " WHERE `" . $key . "` IS NULL";
 				} else if (is_string($key)) {
-					$where = " WHERE `" . $key . "` = " . $value;
+					$where = " WHERE `" . $key . "` = '" . $value . "'";
 				} else {
 					$where = " WHERE " . $value;
 				}
@@ -308,7 +296,7 @@ class MySQL
 				if (is_null($value)) {
 					$where = " AND `" . $key . "` IS NULL";
 				} else if (is_string($key)) {
-					$where .= " AND `" . $key . "` = " . $value;
+					$where .= " AND `" . $key . "` = '" . $value . "'";
 				} else {
 					$where .= " AND " . $value;
 				}
@@ -1243,8 +1231,9 @@ class MySQL
 				$this->SetError();
 				return false;
 			} else {
+				$members = array();
 				//while($member = mysqli_fetch_object($this->last_result)){
-				while ($member = mysqli_fetch_array($this->last_result, $resultType)){
+				while ($member = @mysqli_fetch_array($this->last_result, $resultType)){
 					$members[] = $member;
 				}
 				mysqli_data_seek($this->last_result, 0);
@@ -1810,4 +1799,3 @@ class MySQL
 		}
 	}
 }
-?>
