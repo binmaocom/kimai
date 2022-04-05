@@ -23,7 +23,7 @@ class MySQL
 	private $db_user    = "";          // user name
 	private $db_pass    = "";          // password
 	private $db_dbname  = "";          // database name
-	private $db_charset = "";          // optional character set (i.e. utf8)
+	private $db_charset = "utf8";          // optional character set (i.e. utf8)
 	private $db_pcon    = false;      // use persistent connection?
 
 	// constants for SQLValue function
@@ -300,7 +300,7 @@ class MySQL
 				if (is_null($value)) {
 					$where = " WHERE `" . $key . "` IS NULL";
 				} else if (is_string($key)) {
-					$where = " WHERE `" . $key . "` = " . $value;
+					$where = " WHERE `" . $key . "` = '" . $value . "'";
 				} else {
 					$where = " WHERE " . $value;
 				}
@@ -308,7 +308,7 @@ class MySQL
 				if (is_null($value)) {
 					$where = " AND `" . $key . "` IS NULL";
 				} else if (is_string($key)) {
-					$where .= " AND `" . $key . "` = " . $value;
+					$where .= " AND `" . $key . "` = '" . $value . "'";
 				} else {
 					$where .= " AND " . $value;
 				}
@@ -1243,8 +1243,9 @@ class MySQL
 				$this->SetError();
 				return false;
 			} else {
+				$members = array();
 				//while($member = mysqli_fetch_object($this->last_result)){
-				while ($member = mysqli_fetch_array($this->last_result, $resultType)){
+				while ($member = @mysqli_fetch_array($this->last_result, $resultType)){
 					$members[] = $member;
 				}
 				mysqli_data_seek($this->last_result, 0);
@@ -1810,4 +1811,4 @@ class MySQL
 		}
 	}
 }
-?>
+
